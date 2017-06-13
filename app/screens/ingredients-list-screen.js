@@ -4,14 +4,14 @@ import {
   Content,
 } from 'native-base';
 import IngredientsList from "../components/ingredients-list";
-import ingredients from "../fixtures/ingredients";
+import { ingredients, categories } from "../fixtures/ingredients";
 
 class IngredientsListScreen extends Component {
   render() {
     return (
       <Container>
         <Content>
-          <IngredientsList ingredients={ingredients} />
+          <IngredientsList ingredients={ingredients} categories={categories} />
         </Content>
       </Container>
     );

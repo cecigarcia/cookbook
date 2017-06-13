@@ -6,6 +6,7 @@ import {
   ListItem,
   Text,
 } from 'native-base';
+import { View } from "react-native";
 
 const Ingredient = ({ ingredient }) => (
   <ListItem>
@@ -13,9 +14,18 @@ const Ingredient = ({ ingredient }) => (
   </ListItem>
 );
 
-const IngredientsList = ({ ingredients }) => (
+const Category = ({ category, ingredients, firstItem }) => (
+  <View>
+    <ListItem itemHeader first={firstItem}>
+      <Text>{category.name.toUpperCase()}</Text>
+    </ListItem>
+    {ingredients.filter(i => i.category.id === category.id).map(i => <Ingredient ingredient={i} />)}
+  </View>
+);
+
+const IngredientsList = ({ ingredients, categories }) => (
   <List>
-    {ingredients.map(i => <Ingredient ingredient={i} />)}
+    {categories.map((c, i) => <Category category={c} ingredients={ingredients} firstItem={i === 0} />)}
   </List>
 );
 

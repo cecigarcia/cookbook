@@ -1,41 +1,8 @@
 import React, { Component } from "react";
-import {
-  AppRegistry,
-  View,
-} from "react-native";
-import { StackNavigator } from "react-navigation";
-import { TabNavigator } from "react-navigation";
-import {
-  Container,
-  Content,
-  Button,
-  Text,
-  List,
-  ListItem,
-} from 'native-base';
+import { AppRegistry, View } from "react-native";
+import { StackNavigator, TabNavigator } from "react-navigation";
 import IngredientsListScreen from "./screens/ingredients-list-screen";
-
-class RecipesListScreen extends React.Component {
-  render() {
-    return (
-      <Container>
-        <Content>
-          <List>
-            <ListItem>
-              <Text>Simon Mignolet</Text>
-            </ListItem>
-            <ListItem>
-              <Text>Nathaniel Clyne</Text>
-            </ListItem>
-            <ListItem>
-              <Text>Dejan Lovren</Text>
-            </ListItem>
-          </List>
-        </Content>
-      </Container>
-    );
-  }
-}
+import RecipesListScreen from "./screens/recipes-list-screen";
 
 const MainScreenNavigator = TabNavigator({
   Recipes: { screen: RecipesListScreen },
