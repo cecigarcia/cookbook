@@ -4,15 +4,20 @@ import {
   Content,
   Text,
 } from 'native-base';
+import { ApolloProvider } from "react-apollo";
+import apolloClient from "../config/apollo-client";
+import RecipesList from "../components/recipes/recipes-list";
 
 class RecipesListScreen extends Component {
   render() {
     return (
-      <Container>
-        <Content>
-          <Text>...here my recipes</Text>
-        </Content>
-      </Container>
+      <ApolloProvider client={apolloClient}>
+        <Container>
+          <Content>
+            <RecipesList />
+          </Content>
+        </Container>
+      </ApolloProvider>
     );
   }
 }
