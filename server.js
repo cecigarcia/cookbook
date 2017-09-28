@@ -2,6 +2,8 @@ var express = require("express");
 var graphqlHTTP = require("express-graphql");
 var { buildSchema } = require("graphql");
 var { recipes } = require("./app/fixtures/recipes");
+var { ingredients } = require("./app/fixtures/ingredients");
+var { categories } = require("./app/fixtures/categories");
 
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
@@ -10,16 +12,40 @@ var schema = buildSchema(`
     name: String
   }
 
+  type Category {
+    id: Int!
+    name: String
+    ingredients: [Ingredient]
+  }
+
+  type Ingredient {
+    id: Int!
+    name: String
+    category: Category
+  }
+
   type Query {
     recipes: [Recipe]
+    categories: [Category]
+    ingredients(categoryId: Int): [Ingredient]
   }
 `);
 
 // The root provides a resolver function for each API endpoint
 var root = {
-  recipes: () => {
+  recipes: function () {
     return recipes;
   },
+
+  categories: function () {
+    return categories;
+  },
+
+  ingredients: function ({categoryId}) {
+    return ingredients.filter(function (ingredient) {
+      return ingredient.category.id === categoryId;
+    });
+  }
 };
 
 var app = express();
