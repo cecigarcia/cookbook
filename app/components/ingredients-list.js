@@ -7,6 +7,19 @@ import {
   Text,
 } from 'native-base';
 import { View } from "react-native";
+import { gql, graphql } from "react-apollo";
+
+const MyQuery = gql`query
+  MyQuery {
+    categories {
+      id
+      name
+      ingredients {
+        id
+        name
+      }
+    }
+ }`;
 
 const Ingredient = ({ ingredient }) => (
   <ListItem>
@@ -14,19 +27,29 @@ const Ingredient = ({ ingredient }) => (
   </ListItem>
 );
 
-const Category = ({ category, ingredients, firstItem }) => (
+const Category = ({ category, firstItem }) => (
   <View>
     <ListItem itemHeader first={firstItem}>
       <Text>{category.name.toUpperCase()}</Text>
     </ListItem>
-    {ingredients.filter(i => i.category.id === category.id).map(i => <Ingredient ingredient={i} />)}
+    {category.ingredients.map(i => <Ingredient ingredient={i} />)}
   </View>
 );
 
-const IngredientsList = ({ ingredients, categories }) => (
-  <List>
-    {categories.map((c, i) => <Category category={c} ingredients={ingredients} firstItem={i === 0} />)}
-  </List>
-);
+const IngredientsList = ({ data }) => {
+  if (data.networkStatus === 1) {
+    return <Text>loading...</Text>
+  }
 
-export default IngredientsList;
+  if (data.error) {
+    return <Text>Error!</Text>
+  }
+
+  return(
+    <List>
+      {data.categories.map((c, i) => <Category category={c} firstItem={i === 0} />)}
+    </List>
+  );
+}
+
+export default graphql(MyQuery, { options: { notifyOnNetworkStatusChange: true }})(IngredientsList);

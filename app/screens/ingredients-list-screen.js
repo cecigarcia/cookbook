@@ -3,17 +3,20 @@ import {
   Container,
   Content,
 } from 'native-base';
+import { ApolloProvider } from "react-apollo";
+import apolloClient from "../config/apollo-client";
 import IngredientsList from "../components/ingredients-list";
-import { ingredients, categories } from "../fixtures/ingredients";
 
 class IngredientsListScreen extends Component {
   render() {
     return (
-      <Container>
-        <Content>
-          <IngredientsList ingredients={ingredients} categories={categories} />
-        </Content>
-      </Container>
+      <ApolloProvider client={apolloClient}>
+        <Container>
+          <Content>
+            <IngredientsList />
+          </Content>
+        </Container>
+      </ApolloProvider>
     );
   }
 }

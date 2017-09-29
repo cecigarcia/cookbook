@@ -1,12 +1,12 @@
-var express = require("express");
-var graphqlHTTP = require("express-graphql");
-var { buildSchema } = require("graphql");
-var { recipes } = require("./app/fixtures/recipes");
-var { ingredients } = require("./app/fixtures/ingredients");
-var { categories } = require("./app/fixtures/categories");
+import express from "express";
+import graphqlHTTP from "express-graphql";
+import { buildSchema } from "graphql";
+import { recipes } from "./app/fixtures/recipes";
+import { ingredients } from "./app/fixtures/ingredients";
+import { categories } from "./app/fixtures/categories";
 
 // Construct a schema, using GraphQL schema language
-var schema = buildSchema(`
+const schema = buildSchema(`
   type Recipe {
     id: Int!
     name: String
@@ -31,28 +31,16 @@ var schema = buildSchema(`
   }
 `);
 
+const fetchIngredients = id => ingredients.filter(i => i.category.id === id);
+
 // The root provides a resolver function for each API endpoint
-var root = {
-  recipes: function () {
-    return recipes;
-  },
-
-  categories: function () {
-    return categories;
-  },
-
-  ingredients: function ({categoryId}) {
-    return ingredients.filter(function (ingredient) {
-      return ingredient.category.id === categoryId;
-    });
-  }
+const rootValue = {
+  recipes: () => recipes,
+  categories: () => categories.map(c => ({ ...c, ingredients: fetchIngredients(c.id) })),
+  ingredients: ({categoryId}) => fetchIngredients(categoryId),
 };
 
-var app = express();
-app.use('/graphql', graphqlHTTP({
-  schema: schema,
-  rootValue: root,
-  graphiql: true,
-}));
+const app = express();
+app.use('/graphql', graphqlHTTP({ schema, rootValue, graphiql: true }));
 app.listen(4000);
 console.log('Running a GraphQL API server at localhost:4000/graphql');
