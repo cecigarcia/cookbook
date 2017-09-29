@@ -1,20 +1,31 @@
 import React, { Component } from "react";
 import { AppRegistry, View } from "react-native";
 import { StackNavigator, TabNavigator } from "react-navigation";
-import IngredientsListScreen from "./screens/ingredients-list-screen";
-import RecipesListScreen from "./screens/recipes-list-screen";
+import { IngredientsScreen, RecipesScreen } from "./screens";
+import { ApolloProvider } from "react-apollo";
+import apolloClient from "./config/apollo-client";
 
 const MainScreenNavigator = TabNavigator({
-  Recipes: { screen: RecipesListScreen },
-  Ingredients: { screen: IngredientsListScreen },
+  Recipes: { screen: RecipesScreen },
+  Ingredients: { screen: IngredientsScreen },
 });
 
 MainScreenNavigator.navigationOptions = {
   title: "My Cookbook",
 };
 
-const Cookbook = StackNavigator({
+const App = StackNavigator({
   Home: { screen: MainScreenNavigator },
 });
+
+class Cookbook extends React.Component {
+  render(){
+    return(
+      <ApolloProvider client={apolloClient}>
+        <App />
+      </ApolloProvider>
+    )
+  }
+}
 
 AppRegistry.registerComponent('Cookbook', () => Cookbook);
